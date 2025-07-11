@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="2.6" jmeter="2.11 r1554548">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="CSM Lasttest" enabled="true">
+      <stringProp name="TestPlan.comments">Lasttests um die Grundperformance des CSM Service zu messen</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Standard Threads" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">2000</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
+        <longProp name="ThreadGroup.start_time">1415620658000</longProp>
+        <longProp name="ThreadGroup.end_time">1415620658000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <stringProp name="TestPlan.comments">Zu schaffen sind folgende Anforderungen
+50 Tx/Sec
+min 10 Requests gleichzeitig
+300ms max. Response Time</stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="ONLINE_VALIDATE_TAN_WITH_MAC" enabled="true">
+          <stringProp name="TestPlan.comments">Validate TAN mit online Schnittstelle
+Tan ist OK
+
+Damit diese hier funktiomiert ist in user.properties von jmeter 
+tcp.BinaryTCPClient.eomByte=4
+tcp.BinaryTCPClient.eomBytePosition=5
+hinterlegt.</stringProp>
+          <stringProp name="TCPSampler.classname">BinaryTCPClientSimpleImpl</stringProp>
+          <stringProp name="TCPSampler.server">10.1.4.211</stringProp>
+          <boolProp name="TCPSampler.reUseConnection">true</boolProp>
+          <stringProp name="TCPSampler.port">7138</stringProp>
+          <boolProp name="TCPSampler.nodelay">false</boolProp>
+          <stringProp name="TCPSampler.timeout"></stringProp>
+          <stringProp name="TCPSampler.request">17104F4E4C5F56414C49444154455F54414E040000011D5002064B45595F49440000000301000151020952414E444F4D5F4E52000000101122334455667788887766554433221152020B434F4D4D414E445F524551000000CD171043534D5F56414C49444154455F54414E09000000B600010354414E000000042405821F010207434152445F4E52000000080F9FDC4CB7B3B8AD020208353950414E5F494400000002110003010C4150505F4558505F444154450000000312123104020756455253494F4E000000010205030A53544F5245445F4154430000000204910602044D4F4445000000010007020A444154415F494E50555400000001010802044441544100000020EB4E84B3DFA13BB8947A098AACC3B9147D4B713A64CA9D045B1F29FFCEDBF3E05302034D41430000000415EE61D0</stringProp>
+          <boolProp name="TCPSampler.closeConnection">false</boolProp>
+          <stringProp name="ConfigTestElement.username"></stringProp>
+          <stringProp name="ConfigTestElement.password"></stringProp>
+        </TCPSampler>
+        <hashTree/>
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="ONLINE_VALIDATE_TAN_WITH_MAC_OLD" enabled="false">
+          <stringProp name="TestPlan.comments">Validate TAN mit online Schnittstelle
+Tan ist OK
+
+Damit diese hier funktiomiert ist in user.properties von jmeter 
+tcp.BinaryTCPClient.eomByte=4
+tcp.BinaryTCPClient.eomBytePosition=5
+hinterlegt.
+
+Old bedeutet, dass aus der RandomNumber nicht der SessionKey vom Macabgeleitet wird, sondern es wird für die Mac Berechnung direkt der Mac verwendet.</stringProp>
+          <stringProp name="TCPSampler.classname">BinaryTCPClientSimpleImpl</stringProp>
+          <stringProp name="TCPSampler.server">10.1.4.211</stringProp>
+          <boolProp name="TCPSampler.reUseConnection">true</boolProp>
+          <stringProp name="TCPSampler.port">7138</stringProp>
+          <boolProp name="TCPSampler.nodelay">false</boolProp>
+          <stringProp name="TCPSampler.timeout">300</stringProp>
+          <stringProp name="TCPSampler.request">17104F4E4C5F56414C49444154455F54414E040000011D5002064B45595F49440000000301000151020952414E444F4D5F4E52000000101122334455667788887766554433221152020B434F4D4D414E445F524551000000CD171043534D5F56414C49444154455F54414E09000000B600010354414E000000042405821F010207434152445F4E52000000080F9FDC4CB7B3B8AD020208353950414E5F494400000002110003010C4150505F4558505F444154450000000312123104020756455253494F4E000000010205030A53544F5245445F4154430000000204910602044D4F4445000000010007020A444154415F494E50555400000001010802044441544100000020EB4E84B3DFA13BB8947A098AACC3B9147D4B713A64CA9D045B1F29FFCEDBF3E05302034D41430000000423FE3445</stringProp>
+          <boolProp name="TCPSampler.closeConnection">false</boolProp>
+          <stringProp name="ConfigTestElement.username"></stringProp>
+          <stringProp name="ConfigTestElement.password"></stringProp>
+        </TCPSampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="Lasttest Details Results Tree" enabled="false">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <objProp>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="TestPlan.comments">Bitte diesen Report bei Echttest deaktivieren, damit die Performance nicht beeinträchtigt wird</stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Lasttest Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <objProp>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>false</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="TestPlan.comments">Zu schaffen sind folgende Anforderungen
+50 Tx/Sec
+min 10 Requests gleichzeitig
+300ms max. Response Time</stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
