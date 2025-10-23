@@ -7,12 +7,12 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Path to JMeter executable (adjust if needed)
-JMETER_BIN="/home/johannes/dev/tools/apache-jmeter-5.6.3-SNAPSHOT/bin/jmeter.sh"
+JMETER_BIN="/home/johannes/dev/jmeter/bin/jmeter.sh"
 
 # Arguments
 ARGUMENTS=()
-ARGUMENTS+=("--addprop" "$SCRIPT_DIR/csmjmeter.properties")
-ARGUMENTS+=("--testfile" "$SCRIPT_DIR/CsmJMeterLasttest.jmx")
+ARGUMENTS+=("--addprop" "$SCRIPT_DIR/csmpingjmeter.properties")
+ARGUMENTS+=("--testfile" "$SCRIPT_DIR/CsmPingJMeterLasttest.jmx")
 
 # Execute JMeter
 "$JMETER_BIN" "${ARGUMENTS[@]}"

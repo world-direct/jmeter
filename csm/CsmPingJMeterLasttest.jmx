@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3-SNAPSHOT 34a2785">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="CSM Lasttest">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="CSM Ping Lasttest">
       <stringProp name="TestPlan.comments">Lasttests um die Grundperformance des CSM Service zu messen</stringProp>
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
         <collectionProp name="Arguments.arguments"/>
@@ -36,14 +36,13 @@ min 10 Requests gleichzeitig
           <stringProp name="TestPlan.comments">Limit to 50 Tx/sec</stringProp>
         </ConstantThroughputTimer>
         <hashTree/>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="59panid_0500_appexp_1512_CSM_VALIDATE_TAN_withTanOK.txt">
-          <stringProp name="TestPlan.comments">Validate TAN mit alter Schnittstelle
-Tan ist OK
-Die Response liefert als letztes Byte 0x0D was als Ende der Nachricht gekennzeichnet wird.
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="CSM_PING">
+          <stringProp name="TestPlan.comments">CSM_PING.txt an alter oder neuer Schnittstelle, beides funktioniert
+Die Response liefert am Ende immer die Version z.b 0.3.0 letztes Byte 0x33 wir als Ende der Nachricht gekennzeichnet wird, damit verlieren wir .0 von 3.0 aber das ist OK.
 D.h. aber es kann keine andere Nachricht gesendet werden, weil JMeter global so konfiguriert ist, dass das Ende für genau diese Nachricht erkannt wird.
 
 Damit diese hier funktiomiert ist in user.properties von jmeter 
-tcp.BinaryTCPClient.eomByte=13
+tcp.BinaryTCPClient.eomByte=51
 hinterlegt.</stringProp>
           <stringProp name="TCPSampler.classname">BinaryTCPClientImpl</stringProp>
           <stringProp name="TCPSampler.server">172.17.80.1</stringProp>
@@ -51,7 +50,7 @@ hinterlegt.</stringProp>
           <stringProp name="TCPSampler.port">7138</stringProp>
           <boolProp name="TCPSampler.nodelay">false</boolProp>
           <stringProp name="TCPSampler.timeout">300</stringProp>
-          <stringProp name="TCPSampler.request">171043534D5F56414C49444154455F54414E090000020800010354414E000000040894961F010207434152445F4E5200000008130FEC52D80F409E020208353950414E5F494400000002110003010C4150505F4558505F444154450000000312123104020756455253494F4E000000010005030A53544F5245445F41544300000002000C0602044D4F4445000000010007020A444154415F494E50555400000001000802044441544100000172EDC1AEDED8FA55323CEE5BB72505DB2D261B8C7C5679E84799048DC321B5E3CA3449FF2B2F3AC745CBED57D49F2DA40AE6D85FE283D81DB14255B4FD6129E8934F9547D4B3325150B02ADC9667A7B749BE8C8E7760640D2706974831F4E45B53C60B4D806CCA3B7B740BB2A5875C5C14379FDFE4F80302D26B331206E3CD84312215DBD863EBCCF09EFAA0AA0733DB90D77A1BD1509E42D9FB8FD72535CBAA56E91AB7849F7B4DD4B65E704DED137BE729830AE5721E16653E146236F2C816E9A682AA2B28630652449FE83543E68541B22373C96569C69EBB2A7AE022AB1113DEB47C75078C3F8FD125D10B119341C5FCC21F2531699AABFA3AE6CBCE5CE1FC1B1AF50C43DD40B6E457F2765D02F79C8EC9D7A0DF04DAB583AA6FA0FEC2CECBE41BDD95E43D50ED069F151F311BEFEDF09E61E27524CDE3DFE4DD07B8C722A9C21FFBBBF396B95CBE6400AD94C670E1ABAB8594FEB0BC5E954EF8A7065223BD3C8E182377CFC12D940F7CC98FEBC4A04657</stringProp>
+          <stringProp name="TCPSampler.request">0F0843534D5F50494E470000000000</stringProp>
           <boolProp name="TCPSampler.closeConnection">false</boolProp>
           <stringProp name="ConfigTestElement.username"></stringProp>
           <stringProp name="ConfigTestElement.password"></stringProp>
@@ -119,10 +118,10 @@ hinterlegt.</stringProp>
             </value>
           </objProp>
           <stringProp name="filename"></stringProp>
-          <stringProp name="TestPlan.comments">Bitte diesen Report bei Echttest deaktivieren, damit die Performance nicht beeinträchtigt wird</stringProp>
+          <stringProp name="TestPlan.comments">Bitte diesen Report bei Echttest deaktivieren, damit die Performance nicht beeinträchtigt wird. Dient dem Debuggen und testen ob die Funktion ok ist.</stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Lasttest Summary Report" enabled="true">
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Lasttest Summary Report">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -190,7 +189,7 @@ min 10 Requests gleichzeitig
 300ms max. Response Time</stringProp>
         </ResultCollector>
         <hashTree/>
-        <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+        <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -225,7 +224,8 @@ min 10 Requests gleichzeitig
             </value>
           </objProp>
           <stringProp name="filename"></stringProp>
-          <stringProp name="RespTimeGraph.interval">100</stringProp>
+          <stringProp name="RespTimeGraph.interval">1000</stringProp>
+          <stringProp name="RespTimeGraph.yaxisscalemaxvalue">50</stringProp>
           <intProp name="RespTimeGraph.linestrockwidth">2</intProp>
           <intProp name="RespTimeGraph.lineshapepoint">1</intProp>
         </ResultCollector>
