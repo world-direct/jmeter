@@ -19,7 +19,7 @@ How to use this script:
           </elementProp>
           <elementProp name="DefaultResponseTimeLimit" elementType="Argument">
             <stringProp name="Argument.name">DefaultResponseTimeLimit</stringProp>
-            <stringProp name="Argument.value">60000</stringProp>
+            <stringProp name="Argument.value">5000</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="DefaultThreadCount" elementType="Argument">
@@ -39,7 +39,12 @@ How to use this script:
           </elementProp>
           <elementProp name="DefaultTcpImpl" elementType="Argument">
             <stringProp name="Argument.name">DefaultTcpImpl</stringProp>
-            <stringProp name="Argument.value">BinaryTCPClientImpl</stringProp>
+            <stringProp name="Argument.value">BinaryTCPClientSimpleImpl</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="DefaultConnectTimeLimit" elementType="Argument">
+            <stringProp name="Argument.name">DefaultConnectTimeLimit</stringProp>
+            <stringProp name="Argument.value">1000</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -47,7 +52,7 @@ How to use this script:
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
-      <ConfigTestElement guiclass="TCPConfigGui" testclass="ConfigTestElement" testname="env:LOCAL (localhost)" enabled="true">
+      <ConfigTestElement guiclass="TCPConfigGui" testclass="ConfigTestElement" testname="env:LOCAL (localhost)" enabled="false">
         <stringProp name="TCPSampler.server">127.0.0.1</stringProp>
         <boolProp name="TCPSampler.reUseConnection">false</boolProp>
         <stringProp name="TCPSampler.port">${DefaultCsmServicePort}</stringProp>
@@ -55,20 +60,21 @@ How to use this script:
         <stringProp name="TCPSampler.timeout">${DefaultResponseTimeLimit}</stringProp>
         <stringProp name="TCPSampler.request"></stringProp>
         <boolProp name="TCPSampler.closeConnection">false</boolProp>
-        <stringProp name="TCPSampler.classname">BinaryTCPClientImpl</stringProp>
+        <stringProp name="TCPSampler.classname">${DefaultTcpImpl}</stringProp>
         <stringProp name="TestPlan.comments">Configures the traffic to go to a locally running instance of csm-service.</stringProp>
+        <stringProp name="TCPSampler.ctimeout">${DefaultConnectTimeLimit}</stringProp>
       </ConfigTestElement>
       <hashTree/>
-      <ConfigTestElement guiclass="TCPConfigGui" testclass="ConfigTestElement" testname="env:DEV (hsmcli1office)" enabled="false">
+      <ConfigTestElement guiclass="TCPConfigGui" testclass="ConfigTestElement" testname="env:DEV (hsmcli1office)" enabled="true">
         <stringProp name="TCPSampler.server">hsmcli1office</stringProp>
         <boolProp name="TCPSampler.reUseConnection">false</boolProp>
         <stringProp name="TCPSampler.port">${DefaultCsmServicePort}</stringProp>
         <boolProp name="TCPSampler.nodelay">false</boolProp>
         <stringProp name="TCPSampler.timeout">${DefaultResponseTimeLimit}</stringProp>
         <stringProp name="TCPSampler.request"></stringProp>
-        <boolProp name="TCPSampler.closeConnection">false</boolProp>
-        <stringProp name="TCPSampler.classname">BinaryTCPClientImpl</stringProp>
+        <stringProp name="TCPSampler.classname">${DefaultTcpImpl}</stringProp>
         <stringProp name="TestPlan.comments">Configures the traffic to go to the dev environment running on hsmcli1office.</stringProp>
+        <stringProp name="TCPSampler.ctimeout">${DefaultConnectTimeLimit}</stringProp>
       </ConfigTestElement>
       <hashTree/>
       <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Limit to 50 Tx/s" enabled="false">
@@ -79,7 +85,7 @@ This allows us to ensure that csm-service calculates this rate correctly.</strin
         <intProp name="calcMode">3</intProp>
       </ConstantThroughputTimer>
       <hashTree/>
-      <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Limit to 80 Tx/s" enabled="false">
+      <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Limit to 80 Tx/s" enabled="true">
         <stringProp name="TestPlan.comments">Limits the transaction rate to 80 per second.
 
 This allows us to ensure smooth operation during expected load.</stringProp>
@@ -98,7 +104,7 @@ This allows us to ensure smooth operation during expected load.</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
         <stringProp name="TestPlan.comments">Sends CSM_PING messages to the selected environment.</stringProp>
         <boolProp name="ThreadGroup.delayedStart">true</boolProp>
       </ThreadGroup>
@@ -119,8 +125,12 @@ This allows us to ensure smooth operation during expected load.</stringProp>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert Success" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-1465095037">250000000000</stringProp>
+              <stringProp name="-406614003">56455253494f4e00000008</stringProp>
             </collectionProp>
-            <stringProp name="TestPlan.comments">The response of the ping request should start with 250000000000</stringProp>
+            <stringProp name="TestPlan.comments">The response of the ping request should meet the following requirements:
+
+- starts with 250000000000, indicates success
+- contains 56455253494f4e00000008, which translates to &quot;VERSION size 8 = x&quot; (no actual version check, as it can check)</stringProp>
             <stringProp name="Assertion.custom_message">The return status of the ping response does not indicate success.</stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -129,7 +139,7 @@ This allows us to ensure smooth operation during expected load.</stringProp>
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="cmd:CSM_VALIDATE_TAN" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="cmd:CSM_VALIDATE_TAN" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -140,7 +150,7 @@ This allows us to ensure smooth operation during expected load.</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
         <stringProp name="TestPlan.comments">Sends CSM_VALIDATE_TAN messages to the selected environment.</stringProp>
         <boolProp name="ThreadGroup.delayedStart">true</boolProp>
       </ThreadGroup>
@@ -162,11 +172,13 @@ This allows us to ensure smooth operation during expected load.</stringProp>
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-22462990">2d0000000000</stringProp>
               <stringProp name="564886233">535441545553000000010001</stringProp>
+              <stringProp name="1744766169">415443000000020084</stringProp>
             </collectionProp>
             <stringProp name="TestPlan.comments">The response of the validate tan request should meet the following requirements:
 
 - should start with 2d0000000000, this indicates the operation was successful
-- should contain 535441545553000000010001, this translates to &quot;STATUS = 0&quot; (eg. tan is valid)</stringProp>
+- should contain 535441545553000000010001, this translates to &quot;STATUS = 0&quot; (eg. tan is valid)
+- should containt 415443000000020084, this translates to &quot;ATC = 132&quot; (eg. end of message)</stringProp>
             <stringProp name="Assertion.custom_message">The return status of the validate tan response does not indicate success.</stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -191,11 +203,13 @@ This allows us to ensure smooth operation during expected load.</stringProp>
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-22462990">2d0000000000</stringProp>
               <stringProp name="564887194">535441545553000000010101</stringProp>
+              <stringProp name="1744765919">415443000000020002</stringProp>
             </collectionProp>
             <stringProp name="TestPlan.comments">The response of the validate tan request should meet the following requirements:
 
 - should start with 2d0000000000, this indicates the operation was successful
-- should contain 535441545553000000010101, this translates to &quot;STATUS = 1&quot; (eg. tan is invalid)</stringProp>
+- should contain 535441545553000000010101, this translates to &quot;STATUS = 1&quot; (eg. tan is invalid)
+- should contain 415443000000020002, this translates to &quot;ATC = 2&quot; (eg. end of message)</stringProp>
             <stringProp name="Assertion.custom_message">The return status of the validate tan response does not indicate success.</stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -219,10 +233,12 @@ This allows us to ensure smooth operation during expected load.</stringProp>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert Error" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="657595380">2d0200000000</stringProp>
+              <stringProp name="1525965803">43534d5f56414c49444154455f54414e0000000000</stringProp>
             </collectionProp>
             <stringProp name="TestPlan.comments">The response of the validate tan request should meet the following requirements:
 
-- should start with 2d0200000000, this indicates the operation was unsuccessful</stringProp>
+- should start with 2d0200000000, this indicates the operation was unsuccessful
+- should contain 43534d5f56414c49444154455f54414e0000000000, this indicates an empty CSM_VALIDATE_TAN response</stringProp>
             <stringProp name="Assertion.custom_message">The return status of the validate tan response does not indicate success.</stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -242,7 +258,7 @@ This allows us to ensure smooth operation during expected load.</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
         <stringProp name="TestPlan.comments">Sends ONL_VALIDATE_TAN messages to the selected environment. This does not send a MAC in the request.</stringProp>
         <boolProp name="ThreadGroup.delayedStart">true</boolProp>
       </ThreadGroup>
@@ -265,12 +281,14 @@ This allows us to ensure smooth operation during expected load.</stringProp>
               <stringProp name="-22462990">2d0000000000</stringProp>
               <stringProp name="564886233">535441545553000000010001</stringProp>
               <stringProp name="500996085">472d0000000000</stringProp>
+              <stringProp name="1744765921">415443000000020004</stringProp>
             </collectionProp>
             <stringProp name="TestPlan.comments">The response of the validate tan request should meet the following requirements:
 
 - should start with 2d0000000000, this indicates the operation was successful
 - should contain 472d0000000000, this indicates the inner operation was successful
-- should contain 535441545553000000010001, this translates to &quot;STATUS = 0&quot; (eg. tan is valid)</stringProp>
+- should contain 535441545553000000010001, this translates to &quot;STATUS = 0&quot; (eg. tan is valid)
+- should containt 415443000000020004, this translates to &quot;ATC = 4&quot; (eg. end of message)</stringProp>
             <stringProp name="Assertion.custom_message">The return status of the online validate tan response does not indicate success.</stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
@@ -290,7 +308,7 @@ This allows us to ensure smooth operation during expected load.</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
         <stringProp name="TestPlan.comments">Sends ONL_VALIDATE_TAN messages to the selected environment. This does send a MAC in the request.</stringProp>
         <boolProp name="ThreadGroup.delayedStart">true</boolProp>
       </ThreadGroup>
@@ -313,12 +331,14 @@ This allows us to ensure smooth operation during expected load.</stringProp>
               <stringProp name="-22462990">2d0000000000</stringProp>
               <stringProp name="564886233">535441545553000000010001</stringProp>
               <stringProp name="500996085">472d0000000000</stringProp>
+              <stringProp name="-22315920">4d414300000004</stringProp>
             </collectionProp>
             <stringProp name="TestPlan.comments">The response of the validate tan request should meet the following requirements:
 
 - should start with 2d0000000000, this indicates the operation was successful
 - should contain 472d0000000000, this indicates the inner operation was successful
-- should contain 535441545553000000010001, this translates to &quot;STATUS = 0&quot; (eg. tan is valid)</stringProp>
+- should contain 535441545553000000010001, this translates to &quot;STATUS = 0&quot; (eg. tan is valid)
+- should contain 4d414300000004, this is the parameter name MAC (4d 41 43) and mac size (00 00 00 04) / because MAC is random, this is the closest check to ensure the full response was received</stringProp>
             <stringProp name="Assertion.custom_message">The return status of the online validate tan response does not indicate success.</stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
