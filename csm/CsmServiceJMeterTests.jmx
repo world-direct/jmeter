@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="CSM Service Tests" enabled="true">
+      <stringProp name="TestPlan.comments">A collection of JMeter components to generate traffic for different test cases of the csm-service.
+
+How to use this script:
+1. Choose an environment by enabling exactly one of the respective components. ( naming -&gt; &quot;env:&lt;ENVIRONMENT-NAME&gt; (&lt;domain&gt;)&quot; )
+2. Choose which types of messages to send by enabling one or more of the message components. ( naming -&gt; &quot;cmd:&lt;COMMAND&gt;&quot; )
+3. OPTIONAL: Some tests require limiting the throughput to ensure that the correct counters are displayed / calculated. In order to do this activate the &quot;Limit throughput to 50 Tx/s&quot; component.</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="DefaultCsmServicePort" elementType="Argument">
+            <stringProp name="Argument.name">DefaultCsmServicePort</stringProp>
+            <stringProp name="Argument.value">6813</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="DefaultResponseTimeLimit" elementType="Argument">
+            <stringProp name="Argument.name">DefaultResponseTimeLimit</stringProp>
+            <stringProp name="Argument.value">5000</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="DefaultThreadCount" elementType="Argument">
+            <stringProp name="Argument.name">DefaultThreadCount</stringProp>
+            <stringProp name="Argument.value">10</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="DefaultTransactionLimit" elementType="Argument">
+            <stringProp name="Argument.name">DefaultTransactionLimit</stringProp>
+            <stringProp name="Argument.value">3000.0</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="IncreasedTransactionLimit" elementType="Argument">
+            <stringProp name="Argument.name">IncreasedTransactionLimit</stringProp>
+            <stringProp name="Argument.value">4800.0</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="DefaultTcpImpl" elementType="Argument">
+            <stringProp name="Argument.name">DefaultTcpImpl</stringProp>
+            <stringProp name="Argument.value">BinaryTCPClientSimpleImpl</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="DefaultConnectTimeLimit" elementType="Argument">
+            <stringProp name="Argument.name">DefaultConnectTimeLimit</stringProp>
+            <stringProp name="Argument.value">1000</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ConfigTestElement guiclass="TCPConfigGui" testclass="ConfigTestElement" testname="env:LOCAL (localhost)" enabled="false">
+        <stringProp name="TCPSampler.server">127.0.0.1</stringProp>
+        <boolProp name="TCPSampler.reUseConnection">false</boolProp>
+        <stringProp name="TCPSampler.port">${DefaultCsmServicePort}</stringProp>
+        <boolProp name="TCPSampler.nodelay">false</boolProp>
+        <stringProp name="TCPSampler.timeout">${DefaultResponseTimeLimit}</stringProp>
+        <stringProp name="TCPSampler.request"></stringProp>
+        <boolProp name="TCPSampler.closeConnection">false</boolProp>
+        <stringProp name="TCPSampler.classname">${DefaultTcpImpl}</stringProp>
+        <stringProp name="TestPlan.comments">Configures the traffic to go to a locally running instance of csm-service.</stringProp>
+        <stringProp name="TCPSampler.ctimeout">${DefaultConnectTimeLimit}</stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <ConfigTestElement guiclass="TCPConfigGui" testclass="ConfigTestElement" testname="env:DEV (hsmcli1office)" enabled="false">
+        <stringProp name="TCPSampler.server">hsmcli1office</stringProp>
+        <boolProp name="TCPSampler.reUseConnection">false</boolProp>
+        <stringProp name="TCPSampler.port">${DefaultCsmServicePort}</stringProp>
+        <boolProp name="TCPSampler.nodelay">false</boolProp>
+        <stringProp name="TCPSampler.timeout">${DefaultResponseTimeLimit}</stringProp>
+        <stringProp name="TCPSampler.request"></stringProp>
+        <stringProp name="TCPSampler.classname">${DefaultTcpImpl}</stringProp>
+        <stringProp name="TestPlan.comments">Configures the traffic to go to the dev environment running on hsmcli1office.</stringProp>
+        <stringProp name="TCPSampler.ctimeout">${DefaultConnectTimeLimit}</stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Limit to 50 Tx/s" enabled="false">
+        <stringProp name="TestPlan.comments">Limits the transaction rate to 50 per second.
+
+This allows us to ensure that csm-service calculates this rate correctly.</stringProp>
+        <stringProp name="throughput">${DefaultTransactionLimit}</stringProp>
+        <intProp name="calcMode">3</intProp>
+      </ConstantThroughputTimer>
+      <hashTree/>
+      <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Limit to 80 Tx/s" enabled="true">
+        <stringProp name="TestPlan.comments">Limits the transaction rate to 80 per second.
+
+This allows us to ensure smooth operation during expected load.</stringProp>
+        <stringProp name="throughput">${IncreasedTransactionLimit}</stringProp>
+        <intProp name="calcMode">3</intProp>
+      </ConstantThroughputTimer>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="cmd:CSM_PING" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${DefaultThreadCount}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <stringProp name="TestPlan.comments">Sends CSM_PING messages to the selected environment.</stringProp>
+        <boolProp name="ThreadGroup.delayedStart">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Ping" enabled="true">
+          <stringProp name="TestPlan.comments">Sends a default ping message to the csm-service.</stringProp>
+          <stringProp name="TCPSampler.server"></stringProp>
+          <boolProp name="TCPSampler.reUseConnection">false</boolProp>
+          <stringProp name="TCPSampler.port"></stringProp>
+          <boolProp name="TCPSampler.nodelay">false</boolProp>
+          <stringProp name="TCPSampler.timeout"></stringProp>
+          <stringProp name="TCPSampler.request">0f0843534d5f50494e470000000000</stringProp>
+          <boolProp name="TCPSampler.closeConnection">false</boolProp>
+          <stringProp name="ConfigTestElement.username"></stringProp>
+          <stringProp name="ConfigTestElement.password"></stringProp>
+        </TCPSampler>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert Success" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="-1465095037">250000000000</stringProp>
+              <stringProp name="-406614003">56455253494f4e00000008</stringProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">The response of the ping request should meet the following requirements:
+
+- starts with 250000000000, indicates success
+- contains 56455253494f4e00000008, which translates to &quot;VERSION size 8 = x&quot; (no actual version check, as it can change)</stringProp>
+            <stringProp name="Assertion.custom_message">The return status of the ping response does not indicate success.</stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="cmd:CSM_VALIDATE_TAN" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${DefaultThreadCount}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <stringProp name="TestPlan.comments">Sends CSM_VALIDATE_TAN messages to the selected environment.</stringProp>
+        <boolProp name="ThreadGroup.delayedStart">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Validate TAN Positive" enabled="true">
+          <stringProp name="TestPlan.comments">Sends a default validate tan message to the csm-service.</stringProp>
+          <stringProp name="TCPSampler.server"></stringProp>
+          <boolProp name="TCPSampler.reUseConnection">false</boolProp>
+          <stringProp name="TCPSampler.port"></stringProp>
+          <boolProp name="TCPSampler.nodelay">false</boolProp>
+          <stringProp name="TCPSampler.timeout"></stringProp>
+          <stringProp name="TCPSampler.request">171043534d5f56414c49444154455f54414e09000000a500010354414e000000040299791f010207434152445f4e52000000080000000055206168020208353950414e5f494400000002050003010c4150505f4558505f444154450000000315123104020756455253494f4e000000010105030a53544f5245445f4154430000000200670602044d4f4445000000010007020a444154415f494e5055540000000100080204444154410000000f16740f623237353533323039303731</stringProp>
+          <boolProp name="TCPSampler.closeConnection">false</boolProp>
+          <stringProp name="ConfigTestElement.username"></stringProp>
+          <stringProp name="ConfigTestElement.password"></stringProp>
+        </TCPSampler>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert Success" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="-22462990">2d0000000000</stringProp>
+              <stringProp name="564886233">535441545553000000010001</stringProp>
+              <stringProp name="1744766169">415443000000020084</stringProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">The response of the validate tan request should meet the following requirements:
+
+- should start with 2d0000000000, this indicates the operation was successful
+- should contain 535441545553000000010001, this translates to &quot;STATUS = 0&quot; (eg. tan is valid)
+- should contain 415443000000020084, this translates to &quot;ATC = 132&quot; (eg. end of message)</stringProp>
+            <stringProp name="Assertion.custom_message">The return status of the validate tan response does not indicate success.</stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Validate TAN Negative" enabled="false">
+          <stringProp name="TestPlan.comments">Sends a default validate tan message to the csm-service.</stringProp>
+          <stringProp name="TCPSampler.server"></stringProp>
+          <boolProp name="TCPSampler.reUseConnection">false</boolProp>
+          <stringProp name="TCPSampler.port"></stringProp>
+          <boolProp name="TCPSampler.nodelay">false</boolProp>
+          <stringProp name="TCPSampler.timeout"></stringProp>
+          <stringProp name="TCPSampler.request">171043534d5f56414c49444154455f54414e09000000b600010354414e000000040354799f010207434152445f4e5200000008d0576876fa16bb11020208353950414e5f494400000002080003010c4150505f4558505f444154450000000316123104020756455253494f4e000000010205030a53544f5245445f4154430000000200010602044d4f4445000000010007020a444154415f494e50555400000001010802044441544100000020ae248879fe52db2543e53cf445d3d828ce0bf5c560593d97278a59762dd0c2c9</stringProp>
+          <boolProp name="TCPSampler.closeConnection">false</boolProp>
+          <stringProp name="ConfigTestElement.username"></stringProp>
+          <stringProp name="ConfigTestElement.password"></stringProp>
+        </TCPSampler>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert Invalid TAN" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="-22462990">2d0000000000</stringProp>
+              <stringProp name="564887194">535441545553000000010101</stringProp>
+              <stringProp name="1744765919">415443000000020002</stringProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">The response of the validate tan request should meet the following requirements:
+
+- should start with 2d0000000000, this indicates the operation was successful
+- should contain 535441545553000000010101, this translates to &quot;STATUS = 1&quot; (eg. tan is invalid)
+- should contain 415443000000020002, this translates to &quot;ATC = 2&quot; (eg. end of message)</stringProp>
+            <stringProp name="Assertion.custom_message">The return status of the validate tan response does not indicate success.</stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Validate TAN Error" enabled="false">
+          <stringProp name="TestPlan.comments">Sends a default validate tan message to the csm-service.</stringProp>
+          <stringProp name="TCPSampler.server"></stringProp>
+          <boolProp name="TCPSampler.reUseConnection">false</boolProp>
+          <stringProp name="TCPSampler.port"></stringProp>
+          <boolProp name="TCPSampler.nodelay">false</boolProp>
+          <stringProp name="TCPSampler.timeout"></stringProp>
+          <stringProp name="TCPSampler.request">171043534d5f56414c49444154455f54414e09000000b600010354414e000000040368298f010207434152445f4e520000000877d430b29cff1fd1020208353950414e5f494400000002080003010c4150505f4558505f44415445000000031012318a020756455253494f4e000000010005030a53544f5245445f4154430000000200040602044d4f4445000000010007020a444154415f494e505554000000010108020444415441000000207f67e7edbc5c484e4ec3f2f1c38a6f459db6fda69b9ced2f3a5449d07a6bb9a0</stringProp>
+          <boolProp name="TCPSampler.closeConnection">false</boolProp>
+          <stringProp name="ConfigTestElement.username"></stringProp>
+          <stringProp name="ConfigTestElement.password"></stringProp>
+        </TCPSampler>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert Error" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="657595380">2d0200000000</stringProp>
+              <stringProp name="1525965803">43534d5f56414c49444154455f54414e0000000000</stringProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">The response of the validate tan request should meet the following requirements:
+
+- should start with 2d0200000000, this indicates the operation was unsuccessful
+- should contain 43534d5f56414c49444154455f54414e0000000000, this indicates an empty CSM_VALIDATE_TAN response</stringProp>
+            <stringProp name="Assertion.custom_message">The return status of the validate tan response does not indicate success.</stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="cmd:ONL_VALIDATE_TAN" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${DefaultThreadCount}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <stringProp name="TestPlan.comments">Sends ONL_VALIDATE_TAN messages to the selected environment. This does not send a MAC in the request.</stringProp>
+        <boolProp name="ThreadGroup.delayedStart">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Online Validate TAN" enabled="true">
+          <stringProp name="TestPlan.comments">Sends a default online validate tan message without mac to the csm-service.</stringProp>
+          <stringProp name="TCPSampler.server"></stringProp>
+          <boolProp name="TCPSampler.reUseConnection">false</boolProp>
+          <stringProp name="TCPSampler.port"></stringProp>
+          <boolProp name="TCPSampler.nodelay">false</boolProp>
+          <stringProp name="TCPSampler.timeout"></stringProp>
+          <stringProp name="TCPSampler.request">17104f4e4c5f56414c49444154455f54414e03000000f75002064b45595f49440000000303000151020952414e444f4d5f4e52000000100708090a0b0c0d0e0f1011121314151652020b434f4d4d414e445f524551000000b5171043534d5f56414c49444154455f54414e090000009e00010354414e000000040323692f010207434152445f4e52000000080000000055228272020208353950414e5f494400000002030003010c4150505f4558505f444154450000000317123104020756455253494f4e000000010005030a53544f5245445f4154430000000200030602044d4f4445000000010007020a444154415f494e5055540000000100080204444154410000000854321f6138303132</stringProp>
+          <boolProp name="TCPSampler.closeConnection">false</boolProp>
+          <stringProp name="ConfigTestElement.username"></stringProp>
+          <stringProp name="ConfigTestElement.password"></stringProp>
+        </TCPSampler>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert Success" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="-22462990">2d0000000000</stringProp>
+              <stringProp name="564886233">535441545553000000010001</stringProp>
+              <stringProp name="500996085">472d0000000000</stringProp>
+              <stringProp name="1744765921">415443000000020004</stringProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">The response of the validate tan request should meet the following requirements:
+
+- should start with 2d0000000000, this indicates the operation was successful
+- should contain 472d0000000000, this indicates the inner operation was successful
+- should contain 535441545553000000010001, this translates to &quot;STATUS = 0&quot; (eg. tan is valid)
+- should contain 415443000000020004, this translates to &quot;ATC = 4&quot; (eg. end of message)</stringProp>
+            <stringProp name="Assertion.custom_message">The return status of the online validate tan response does not indicate success.</stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="cmd:ONL_VALIDATE_TAN_MAC" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${DefaultThreadCount}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <stringProp name="TestPlan.comments">Sends ONL_VALIDATE_TAN messages to the selected environment. This does send a MAC in the request.</stringProp>
+        <boolProp name="ThreadGroup.delayedStart">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Online Validate TAN with MAC" enabled="true">
+          <stringProp name="TestPlan.comments">Sends a default online validate tan message with mac to the csm-service.</stringProp>
+          <stringProp name="TCPSampler.server"></stringProp>
+          <boolProp name="TCPSampler.reUseConnection">false</boolProp>
+          <stringProp name="TCPSampler.port"></stringProp>
+          <boolProp name="TCPSampler.nodelay">false</boolProp>
+          <stringProp name="TCPSampler.timeout"></stringProp>
+          <stringProp name="TCPSampler.request">17104f4e4c5f56414c49444154455f54414e04000001035002064b45595f49440000000306000151020952414e444f4d5f4e52000000102576ea7e70e09faa1fac7fb24bf581a952020b434f4d4d414e445f524551000000b3171043534d5f56414c49444154455f54414e090000009c00010354414e000000041487891f010207434152445f4e52000000080000000055276781020208353950414e5f494400000002080003010c4150505f4558505f444154450000000321123104020756455253494f4e000000010005030a53544f5245445f4154430000000200850602044d4f4445000000010107020a444154415f494e5055540000000100080204444154410000000699887f0124795302034d4143000000043e08c552</stringProp>
+          <boolProp name="TCPSampler.closeConnection">false</boolProp>
+          <stringProp name="ConfigTestElement.username"></stringProp>
+          <stringProp name="ConfigTestElement.password"></stringProp>
+        </TCPSampler>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert Success" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="-22462990">2d0000000000</stringProp>
+              <stringProp name="564886233">535441545553000000010001</stringProp>
+              <stringProp name="500996085">472d0000000000</stringProp>
+              <stringProp name="-22315920">4d414300000004</stringProp>
+            </collectionProp>
+            <stringProp name="TestPlan.comments">The response of the validate tan request should meet the following requirements:
+
+- should start with 2d0000000000, this indicates the operation was successful
+- should contain 472d0000000000, this indicates the inner operation was successful
+- should contain 535441545553000000010001, this translates to &quot;STATUS = 0&quot; (eg. tan is valid)
+- should contain 4d414300000004, this is the parameter name MAC (4d 41 43) and mac size (00 00 00 04) / because MAC is random, this is the closest check to ensure the full response was received</stringProp>
+            <stringProp name="Assertion.custom_message">The return status of the online validate tan response does not indicate success.</stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Table Summary" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="TestPlan.comments">Overall view of the results.
+
+WARNING: Stopping the test usually leads to a few errors, as their respective assertions fail on abort.</stringProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="Error Results" enabled="true">
+        <boolProp name="ResultCollector.error_logging">true</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="TestPlan.comments">Show the messages that returned non-success.
+
+Usually some errors will appear here once the test run is stopped. Keep that in mind when error rate is relevant to your tests. This is caused by the response assertion failing on aborted messages.</stringProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="TestPlan.comments">Graph to show response times over time.</stringProp>
+        <stringProp name="filename"></stringProp>
+        <stringProp name="RespTimeGraph.interval">1000</stringProp>
+        <stringProp name="RespTimeGraph.graphtitle">Response time in 1 second steps</stringProp>
+        <intProp name="RespTimeGraph.linestrockwidth">1</intProp>
+        <intProp name="RespTimeGraph.lineshapepoint">4</intProp>
+      </ResultCollector>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
