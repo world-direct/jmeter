@@ -2,7 +2,7 @@
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="CSM Service Tests" enabled="true">
-      <stringProp name="TestPlan.comments">A collection of JMeter components to test generate traffic for different test cases of the csm-service.
+      <stringProp name="TestPlan.comments">A collection of JMeter components to generate traffic for different test cases of the csm-service.
 
 How to use this script:
 1. Choose an environment by enabling exactly one of the respective components. ( naming -&gt; &quot;env:&lt;ENVIRONMENT-NAME&gt; (&lt;domain&gt;)&quot; )
