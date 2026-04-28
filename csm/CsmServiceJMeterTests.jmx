@@ -313,7 +313,7 @@ This allows us to ensure smooth operation during expected load.</stringProp>
         <boolProp name="ThreadGroup.delayedStart">true</boolProp>
       </ThreadGroup>
       <hashTree>
-        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Onine Validate TAN with MAC" enabled="true">
+        <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="Online Validate TAN with MAC" enabled="true">
           <stringProp name="TestPlan.comments">Sends a default online validate tan message with mac to the csm-service.</stringProp>
           <stringProp name="TCPSampler.server"></stringProp>
           <boolProp name="TCPSampler.reUseConnection">false</boolProp>
