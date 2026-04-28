@@ -65,7 +65,7 @@ How to use this script:
         <stringProp name="TCPSampler.ctimeout">${DefaultConnectTimeLimit}</stringProp>
       </ConfigTestElement>
       <hashTree/>
-      <ConfigTestElement guiclass="TCPConfigGui" testclass="ConfigTestElement" testname="env:DEV (hsmcli1office)" enabled="true">
+      <ConfigTestElement guiclass="TCPConfigGui" testclass="ConfigTestElement" testname="env:DEV (hsmcli1office)" enabled="false">
         <stringProp name="TCPSampler.server">hsmcli1office</stringProp>
         <boolProp name="TCPSampler.reUseConnection">false</boolProp>
         <stringProp name="TCPSampler.port">${DefaultCsmServicePort}</stringProp>
