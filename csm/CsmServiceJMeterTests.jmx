@@ -288,7 +288,7 @@ This allows us to ensure smooth operation during expected load.</stringProp>
 - should start with 2d0000000000, this indicates the operation was successful
 - should contain 472d0000000000, this indicates the inner operation was successful
 - should contain 535441545553000000010001, this translates to &quot;STATUS = 0&quot; (eg. tan is valid)
-- should containt 415443000000020004, this translates to &quot;ATC = 4&quot; (eg. end of message)</stringProp>
+- should contain 415443000000020004, this translates to &quot;ATC = 4&quot; (eg. end of message)</stringProp>
             <stringProp name="Assertion.custom_message">The return status of the online validate tan response does not indicate success.</stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
