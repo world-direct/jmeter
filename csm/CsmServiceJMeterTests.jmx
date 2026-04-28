@@ -130,7 +130,7 @@ This allows us to ensure smooth operation during expected load.</stringProp>
             <stringProp name="TestPlan.comments">The response of the ping request should meet the following requirements:
 
 - starts with 250000000000, indicates success
-- contains 56455253494f4e00000008, which translates to &quot;VERSION size 8 = x&quot; (no actual version check, as it can check)</stringProp>
+- contains 56455253494f4e00000008, which translates to &quot;VERSION size 8 = x&quot; (no actual version check, as it can change)</stringProp>
             <stringProp name="Assertion.custom_message">The return status of the ping response does not indicate success.</stringProp>
             <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
             <boolProp name="Assertion.assume_success">false</boolProp>
